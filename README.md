@@ -28,6 +28,12 @@ Install dependencies:
 uv sync --extra translation --extra dev
 ```
 
+Or inspect the task runner:
+
+```bash
+make help
+```
+
 Build the document-level corpus:
 
 ```bash
@@ -71,6 +77,15 @@ uv run python scripts/build_hf_dataset_repo.py \
   --output-dir hf_dataset_repo
 ```
 
+The same sequence is available through the Makefile:
+
+```bash
+make review
+make final-train
+make train-validation
+make package
+```
+
 Upload the dataset package:
 
 ```bash
@@ -78,6 +93,12 @@ uv run python scripts/upload_hf_dataset.py \
   --repo-id jmj-minju/transformers-en-ko-aligned-docs \
   --folder hf_dataset_repo \
   --private
+```
+
+Or:
+
+```bash
+make upload-private DATASET_REPO_ID=jmj-minju/transformers-en-ko-aligned-docs
 ```
 
 ## Fine-tuning

@@ -31,13 +31,14 @@ Canonical scripts:
 1. `scripts/build_translation_corpus.py`
 2. `scripts/prepare_translation_dataset.py`
 3. `scripts/report_rejected_pairs.py`
-4. `scripts/split_translation_dataset.py`
-5. `scripts/build_alignment_review.py`
-6. `scripts/build_suspect_review.py`
-7. `scripts/filter_blacklist_pairs.py`
-8. `scripts/split_train_validation.py`
-9. `scripts/build_hf_dataset_repo.py`
-10. `scripts/upload_hf_dataset.py`
+4. `scripts/build_clean_suspects.py`
+5. `scripts/split_translation_dataset.py`
+6. `scripts/build_alignment_review.py`
+7. `scripts/build_suspect_review.py`
+8. `scripts/filter_blacklist_pairs.py`
+9. `scripts/split_train_validation.py`
+10. `scripts/build_hf_dataset_repo.py`
+11. `scripts/upload_hf_dataset.py`
 
 Review policy:
 
@@ -46,3 +47,4 @@ Review policy:
 - Do not publish or upload if required review artifacts are missing.
 - Automation guardrails live in `.codex/hooks.json`.
 - Repo-scoped workflows live in `.agents/skills/`.
+- Use `Makefile` for routine orchestration before inventing new one-off command chains.
