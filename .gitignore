@@ -7,3 +7,17 @@ __pycache__/
 dist/
 build/
 *.pyc
+
+# Generated dataset artifacts
+data/*.jsonl
+data/*.csv
+data/*.json
+!data/blacklist.txt
+!data/review/
+!data/review/*.md
+
+# Generated Hugging Face dataset package
+hf_dataset_repo/
+
+# Training outputs
+outputs/
