@@ -1,0 +1,8 @@
+{
+  "source_commit": "ce7efd8f19",
+  "train_rows": 76,
+  "validation_rows": 5,
+  "stress_test_rows": 880,
+  "blacklist_docs": 13,
+  "status": "passed"
+}
