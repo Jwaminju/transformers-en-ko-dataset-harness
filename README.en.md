@@ -1,46 +1,46 @@
 # Transformers EN-KO Dataset Harness
 
-다국어 기술 문서에서 보수적인 영한 번역 학습 데이터셋을 만들기 위한 Codex 중심 소스 코드 저장소입니다.
+Codex-oriented source repository for building a conservative English-to-Korean translation fine-tuning dataset from multilingual technical documentation.
 
-English guide: [README.en.md](README.en.md)
+Korean guide: [README.md](README.md)
 
-현재 기본 대상 코퍼스는 `huggingface/transformers/docs/source/en` 과 `docs/source/ko` 이지만, 이 하네스는 더 일반적인 원칙을 전제로 설계되어 있습니다.
+The current target corpus comes from `huggingface/transformers/docs/source/en` and `docs/source/ko`, but the harness is designed around a more general rule:
 
-- 같은 상대 경로라고 번역쌍이라고 가정하지 않음
-- 정렬은 보수적으로 수행함
-- 재작성되거나 현지화된 문서는 억지로 맞추지 않고 제외함
+- same relative path does not imply a valid translation pair
+- alignment must be conservative
+- rewritten or localized documents should be rejected instead of forced into the training set
 
-전체 운영 원칙은 [docs/translation_dataset_harness.md](docs/translation_dataset_harness.md) 를 보면 됩니다.
+For the full operating policy, read [docs/translation_dataset_harness.md](docs/translation_dataset_harness.md).
 
-배포된 데이터셋 산출물은 Hugging Face에서 볼 수 있습니다.
+Published dataset outputs can be browsed on Hugging Face:
 
 - [jmj-minju/transformers-en-ko-aligned-docs](https://huggingface.co/datasets/jmj-minju/transformers-en-ko-aligned-docs)
 
-## 저장소 구조
+## Repository layout
 
-- `docs/`: 하네스 문서와 방법론
-- `.codex/`: runtime hook과 guardrail
-- `.agents/skills/`: repo 전용 build/review workflow
-- `scripts/`: 데이터셋 생성, 검토, 패키징, 업로드 스크립트
-- `tests/`: 번역 하네스 테스트
-- `data/`: 중간 산출물, 최종 산출물, 리뷰 산출물
-- `hf_dataset_repo/`: Hugging Face 업로드용 패키지 폴더
+- `docs/`: harness and methodology
+- `.codex/`: runtime hooks and guardrails
+- `.agents/skills/`: repo-scoped build and review workflows
+- `scripts/`: dataset build, review, packaging, and upload commands
+- `tests/`: unit tests for the translation harness
+- `data/`: generated intermediate, final, and review artifacts
+- `hf_dataset_repo/`: upload-ready Hugging Face dataset package
 
-## 빠른 시작
+## Quick start
 
-의존성 설치:
+Install dependencies:
 
 ```bash
 uv sync --extra translation --extra dev
 ```
 
-또는 작업 타깃 확인:
+Or inspect the task runner:
 
 ```bash
 make help
 ```
 
-문서 단위 코퍼스 생성:
+Build the document-level corpus:
 
 ```bash
 uv run python scripts/build_translation_corpus.py \
@@ -49,7 +49,7 @@ uv run python scripts/build_translation_corpus.py \
   --output data/transformers_en_ko_docs.jsonl
 ```
 
-정렬된 chunk pair 생성:
+Build aligned chunk pairs:
 
 ```bash
 uv run python scripts/prepare_translation_dataset.py \
@@ -57,7 +57,7 @@ uv run python scripts/prepare_translation_dataset.py \
   --output data/transformers_en_ko_pairs.jsonl
 ```
 
-clean / contaminated 문서 분리:
+Split clean vs contaminated docs:
 
 ```bash
 uv run python scripts/split_translation_dataset.py \
@@ -68,7 +68,7 @@ uv run python scripts/split_translation_dataset.py \
   --docs-output data/transformers_en_ko_doc_split.csv
 ```
 
-업로드용 패키지 생성:
+Build the upload package:
 
 ```bash
 uv run python scripts/build_hf_dataset_repo.py \
@@ -83,7 +83,7 @@ uv run python scripts/build_hf_dataset_repo.py \
   --output-dir hf_dataset_repo
 ```
 
-같은 흐름을 Makefile로도 실행할 수 있습니다.
+The same sequence is available through the Makefile:
 
 ```bash
 make review
@@ -92,7 +92,7 @@ make train-validation
 make package
 ```
 
-데이터셋 패키지 업로드:
+Upload the dataset package:
 
 ```bash
 uv run python scripts/upload_hf_dataset.py \
@@ -101,15 +101,15 @@ uv run python scripts/upload_hf_dataset.py \
   --private
 ```
 
-또는:
+Or:
 
 ```bash
 make upload-private DATASET_REPO_ID=jmj-minju/transformers-en-ko-aligned-docs
 ```
 
-## 파인튜닝
+## Fine-tuning
 
-clean split으로 학습하고 clean validation으로 모델 선택을 합니다.
+Train on the clean split and validate on the clean validation set:
 
 ```bash
 uv run python scripts/train_translation_model.py \
@@ -119,4 +119,4 @@ uv run python scripts/train_translation_model.py \
   --output-dir outputs/opus-en-ko-transformers
 ```
 
-`data/transformers_en_ko_eval_contaminated.jsonl` 은 정식 validation이 아니라 stress-test 용도로만 사용하는 것이 맞습니다.
+Use `data/transformers_en_ko_eval_contaminated.jsonl` only as a stress-test set, not as the main validation set.
